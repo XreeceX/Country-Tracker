@@ -1,7 +1,11 @@
 fetchCountries = async () => {
     const response = await fetch('https://restcountries.com/v2/all');
-    const myJson = await response.json();
-    localStorage.setItem('jsonData', JSON.stringify(myJson));
+    const myJson = await response.json(); //extract JSON from the http response
+    console.log(myJson);
+    localStorage['jsonData'] = JSON.stringify(myJson);
+
+    debugger
+
 
     for (var i = 0; i < myJson.length; i++) {
         const div = document.createElement('div');
@@ -43,10 +47,12 @@ fetchCountries = async () => {
         // }
     }
 
+    console.log(c_box);
 }
 
 fetchCountries();
 
+debugger
 const search = document.forms['input-form'].querySelector('input');
 search.addEventListener('keyup', function (e) {
     const searchTerm = e.target.value.toLowerCase();
@@ -65,32 +71,32 @@ search.addEventListener('keyup', function (e) {
 
 function selectRegions() {
     const list = document.getElementById('regions');
-    const selectedOption = list.options[list.selectedIndex];
+    debugger
+
     document.getElementById('search').value = "";
 
-    const regions = document.getElementsByTagName('li');
-    if (selectedOption.value === 'placeholder') {
-        for (let i = 1; i < regions.length; i += 3) {
-            regions[i].parentElement.parentElement.style.display = "block";
-        }
-        return;
-    }
+    const selected_region = list.options[list.selectedIndex].text.toLowerCase();
 
-    const selected_region = selectedOption.text.toLowerCase();
-    for (let i = 1; i < regions.length; i += 3) {
-        if (regions[i].innerText.toLowerCase().indexOf(selected_region) !== -1) {
+    const regions = document.getElementsByTagName('li');
+
+    for (var i = 1; i < regions.length; i += 3) {
+        if (regions[i].innerText.toLowerCase().indexOf(selected_region) != -1) {
             regions[i].parentElement.parentElement.style.display = "block";
         } else {
             regions[i].parentElement.parentElement.style.display = "none";
         }
     }
+
+    console.log(list);
 }
 
 function toggleTheme() {
+    // alert('clicked');
+    debugger
+
     var currentTheme = document.documentElement.getAttribute('data-theme');
     var text = document.getElementById('dark-mode-text');
 
-    let targetTheme;
     if (currentTheme === 'light') {
         targetTheme = 'dark';
         text.innerText = "Light Mode";
@@ -113,6 +119,7 @@ function displayCountryDetails(e, myJson) {
     var main = document.getElementsByClassName('main');
     var section = document.getElementsByClassName('details-section');
 
+    debugger
     if (e.target.tagName === "IMG" || e.target.tagName === "H3" || e.target.tagName === "UL") {
         var parent = e.target.parentElement;
         var children = parent.children;
@@ -134,6 +141,7 @@ function displayCountryDetails(e, myJson) {
 }
 
 function setData(myJson, children, section, recursion) {
+    debugger
     var textgrid = document.getElementsByClassName('text-grid');
     textgrid[0].style.display = "grid";
     for (var i = 0; i < myJson.length; i++) {
@@ -155,16 +163,17 @@ function setData(myJson, children, section, recursion) {
                 section[0].querySelectorAll('.currencies')[0].innerText = "";
             }
             section[0].querySelectorAll('.population')[0].innerText = myJson[i].population;
-            section[0].querySelectorAll('.sub-region')[0].innerText = myJson[i].subregion || "";
-            section[0].querySelectorAll('.tld')[0].innerText = (myJson[i].topLevelDomain && myJson[i].topLevelDomain[0]) || "";
-            section[0].querySelectorAll('.languages')[0].innerText = (myJson[i].languages && myJson[i].languages[0] && myJson[i].languages[0].name) || "";
+            section[0].querySelectorAll('.sub-region')[0].innerText = myJson[i].subregion;
+            section[0].querySelectorAll('.tld')[0].innerText = myJson[i].topLevelDomain[0];
+            section[0].querySelectorAll('.languages')[0].innerText = myJson[i].languages[0].name;
 
             var nearbyCountryCodes = myJson[i].borders;
             var nearbyCountries = [];
 
+            debugger
             if (myJson[i] && myJson[i].borders) {
                 for (var j = 0; j < myJson.length; j++) {
-                    for (let k = 0; k < nearbyCountryCodes.length; k++) {
+                    for (k = 0; k < nearbyCountryCodes.length; k++) {
                         if (myJson[j].alpha3Code === nearbyCountryCodes[k]) {
                             nearbyCountries.push(myJson[j].name);
                         }
@@ -194,6 +203,7 @@ function setData(myJson, children, section, recursion) {
                 ul.appendChild(li);
             }
 
+            console.log(nearbyCountries);
         }
     }
 }
